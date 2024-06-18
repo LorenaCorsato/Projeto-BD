@@ -1,0 +1,157 @@
+create database cafeteria;
+ 
+TABELAS
+
+create table Cliente(
+cod_cliente int auto_increment primary key,
+nome_cliente varchar(50) NOT NULL,
+email_cliente varchar(100) NOT NULL
+);
+
+create table Produto(
+cod_produto int auto_increment primary key,
+nome_produto varchar(30) NOT NULL,
+tipo_produto varchar(30),
+preco decimal (10,2) NOT NULL
+);
+
+create table Fornecedor(
+cod_fornecedor int auto_increment primary key,
+nome_fornecedor varchar(30) NOT NULL,
+tipo_fornecedor varchar(30),
+email_fornecedor varchar(30) NOT NULL 
+);
+
+create table Venda(
+cod_venda int auto_increment primary key,
+data_venda date,
+cod_produto int NOT NULL,
+cod_cliente int NOT NULL,
+foreign key (cod_produto) references Produto(cod_produto),
+foreign key (cod_cliente) references Cliente(cod_cliente )
+);
+
+create table Compra(
+cod_compra int auto_increment primary key,
+data_compra date,
+cod_fornecedor int NOT NULL,
+cod_produto int NOT NULL,
+foreign key (cod_produto) references Produto(cod_produto),
+foreign key (cod_fornecedor) references Fornecedor(cod_fornecedor));
+
+INSERTS
+
+insert into Cliente(nome_cliente, email_cliente) values
+("Lavinia Keiller", "laviniakeiller@gmail.com"),
+("Lorena Ribeiro", "lorenaribeiro@gmail.com"),
+("Lyncon Santos", "lynconsantos@gmail.com");
+
+insert into Produto(nome_produto, tipo_produto, preco) values
+("Pó de café", "Para preparar", '25.99'),
+("Bolo", "Para vender", '45.99'),
+("Xícara", "Para servir o cliente", '30.56');
+
+insert into Fornecedor(nome_fornecedor, tipo_fornecedor, email_fornecedor) values
+("Grãos S.A;" , "de grãos", "graossa@gmail.com"),  
+("Utensílios S.A;" , "de utensílios", "utenciliossa@gmail.com"), 
+("Limpeza S.A;" , "de produtos de limpeza", "limpezasa@gmail.com"); 
+
+insert into venda(data_venda, cod_produto, cod_cliente) values
+("10/04/24", 1, 3),
+("30/02/24", 3, 2),
+("12/01/24", 2, 1 );
+
+insert into compra(data_compra, cod_fornecedor, cod_produto) values
+("20/05/24", 2 , 3),
+("20/06/24", 3 , 1),
+("20/07/24", 1 , 2);
+
+SELECT SIMPLES
+select * FROM Produto WHERE cod_produto like "2%";
+select * FROM Cliente WHERE cod_cliente like "1%";
+select * FROM Produto WHERE preco BETWEEN '30.0' and '100.0';
+
+UPDATES:
+
+update Cliente set nome_cliente= "Nathali Almeida", email_cliente= "nathalialmeida@gmail.com" where cod_cliente= 2;
+
+update Fornecedor set nome_fornecedor= "Mercadorias S.A", Tipo_fornecedor= "De mercadorias", email_fornecedor= "mercadoriassa@gmail.com" where cod_fornecedor= 3;
+
+update compra set data_compra= "09/04/24", cod_compra = 4 where cod_fornecedor= 1;
+
+ALTER TABLE:
+
+ALTER TABLE Fornecedor
+DROP COLUMN tipo_fornecedor;
+
+ALTER TABLE Cliente
+DROP COLUMN email_cliente;
+
+ALTER TABLE Produto
+DROP COLUMN tipo_produto;
+
+JOIN`S:
+
+SELECT 
+	Cliente.nome_cliente, 
+	Venda.data_venda, 
+	Venda.cod_produto
+FROM Cliente
+JOIN Venda ON Cliente.cod_cliente = Venda.cod_Venda;
+
+SELECT 
+	Produto.nome_produto, 
+	Venda.data_venda, 
+	Venda.cod_produto
+FROM Produto
+JOIN Venda ON Produto.cod_produto = Venda.cod_produto;
+
+SELECT 
+	Fornecedor.nome_fornecedor, 
+	Compra.data_compra, 
+	Compra.cod_compra
+FROM Fornecedor
+JOIN Compra ON Fornecedor.cod_fornecedor = Compra.cod_fornecedor;
+
+SUBCONSULTA
+
+SELECT 
+    c.nome_cliente,
+    p.nome_produto,
+FROM 
+    Cliente c
+JOIN 
+    Venda v ON c.cod_cliente = v.cod_cliente
+JOIN 
+    Produto p ON v.cod_produto = p.cod_produto
+ORDER BY 
+    c.nome_cliente;
+
+SELECT 
+    f.nome_fornecedor,
+    p.nome_produto,
+    c.data_compra
+FROM 
+    Fornecedor f
+JOIN 
+    Compra co ON f.cod_fornecedor = co.cod_fornecedor
+JOIN 
+    Produto p ON co.cod_produto = p.cod_produto
+ORDER BY 
+    f.nome_fornecedor;
+
+DELETE
+
+DELETE FROM Compra 
+WHERE cod_fornecedor = 1;
+
+
+DELETE FROM Venda
+WHERE cod_produto = 1;
+
+
+
+
+
+
+
